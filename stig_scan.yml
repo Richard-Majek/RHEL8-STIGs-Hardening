@@ -1,0 +1,27 @@
+---
+###############################################################################
+# How to apply this Ansible Playbook:
+# $ ansible-playbook -i "localhost," -c local playbook.yml
+# $ ansible-playbook -i "192.168.1.155," playbook.yml
+# $ ansible-playbook -i inventory.ini playbook.yml
+#
+###############################################################################
+
+- hosts: all
+  tasks:	  
+    - name: Install yum packages
+      package: 
+        name: "{{ item }}"
+        state: present 
+      with_items:
+        - openscap-scanner
+        - scap-security-guide
+    
+    - name: Import stig security-guide
+      command: wget https://github.com/ComplianceAsCode/content/releases/download/v0.1.60/scap-security-guide-0.1.60.zip -O /home/ec2-user/scap-security-guide-0.1.60.zip 
+    
+    - name: Unzip stig security-guide
+      command: unzip -q /home/ec2-user/scap-security-guide-0.1.60.zip
+      
+    - name: scan against the STIG rules
+      command: oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_stig --results-arf abcd-stig-result.xml --report abcd-stig-result.html /home/ec2-user/scap-security-guide-0.1.60/ssg-rhel8-ds.xml

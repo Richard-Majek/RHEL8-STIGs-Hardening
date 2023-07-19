@@ -1,0 +1,12 @@
+---
+###############################################################################
+# How to apply this Ansible Playbook:
+# $ ansible-playbook -i "localhost," -c local playbook.yml
+# $ ansible-playbook -i "192.168.1.155," playbook.yml
+# $ ansible-playbook -i inventory.ini playbook.yml
+#
+###############################################################################
+
+- hosts: all
+  roles:
+     - { role: rhel8-stig-hardening }
